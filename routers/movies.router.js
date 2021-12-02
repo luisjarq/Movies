@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const express = require("express");
 const Movie = require("../models/movie");
 
@@ -8,14 +7,12 @@ router.get("/", async (req, res, next) => {
   try {
     const movies = await Movie.find();
     return res.json(movies);
-    console.log(movies);
   } catch (error) {
     next(error);
   }
 });
 router.get("/:id", async (req, res, next) => {
   const id = req.params.id;
-  console.log(id);
   Movie.findById(id)
     .then((movie) => {
       if (!movie) {

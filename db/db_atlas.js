@@ -5,4 +5,4 @@ const dbConnection = mongoose.connect(DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-module.exports = dbConnection;
+module.exports = { dbConnection, DB_URL };

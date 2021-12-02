@@ -3,7 +3,9 @@ const express = require("express");
 const moviesRouter = require('./routers/movies.router')
 // Variables
 const server = express();
-const { PORT } = require("../config/config");// Middlewares para entender los json bodys
+const { PORT } = require('./config/config');
+const { DB_URL } = require('./db/db_atlas');
+// Middlewares para entender los json bodys
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 // Middleware enrutador

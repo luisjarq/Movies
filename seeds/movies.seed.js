@@ -1,5 +1,6 @@
+const mongoose = require("mongoose");
 const Movie = require("../models/movie");
-const dbConnection = require("../db/db_atlas");
+const { dbConnection } = require("../db/db_atlas");
 const movies = [
   {
     title: "The Matrix",
@@ -51,24 +52,5 @@ dbConnection
     Movie.insertMany(movieDocuments);
     console.log("Movies saved");
   })
-  .catch((error) => console.error("[ERROR] Error insertando datos", error))
-  .finally(
-    //mongoose.disconnect();
-    )
-/* 
-try {
-    const allMovies = Movie.find();
-    if (allMovies) {
-      Movie.collection.drop();
-      console.log("Collection dropped");
-    }
-  movies.map((m) => {
-    new Movie(m).save();
-    console.log("Movie saved");
-  });
-} catch (error) {
-  console.error("[ERROR] Error insertando datos", error);
-} finally {
-  //mongoose.disconnect();
-} 
-*/
+  .catch((error) => console.error("[ERROR] Error insertando datos", error));
+  //.finally(() => mongoose.disconnect())
