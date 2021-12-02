@@ -3,8 +3,7 @@ const express = require("express");
 const moviesRouter = require('./routers/movies.router')
 // Variables
 const server = express();
-const PORT = 3000;
-// Middlewares para entender los json bodys
+const { PORT } = require("../config/config");// Middlewares para entender los json bodys
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 // Middleware enrutador
@@ -16,7 +15,7 @@ server.use("*", (req, res, next) => {
   next(error);
 });
 // Manejador/Middleware de errores, siempre se define con los 4 parametros (err, req, res, next)
-server.use((req, res, next, error) => {
+server.use((error,req, res, next ) => {
   console.error("[ERROR] Ha ocurrido un error", error.status, error.message);
   res
     .status(error.status || 500)
