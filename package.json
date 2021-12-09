@@ -1,6 +1,10 @@
 {
   "name": "movies",
   "version": "1.0.0",
+  "description": "",
+  "engines": {
+    "node": "17.2"
+  },
   "main": "main.js",
   "scripts": {
     "start": "node",
@@ -17,9 +21,5 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
-  },
-  "description": "",
-  "engines": {
-    "node": "17.2"
   }
 }
