@@ -4,6 +4,7 @@ const Movie = require("../models/movie");
 
 const router = express.Router();
 
+// READ OPERATIONS
 router.get("/", (req, res, next) => {
   Movie.find().exec((error, movie) => {
     if (error) {
@@ -66,6 +67,50 @@ router.get("/byGenre/:genre", async (req, res, next) => {
     return res.json(movie);
   });
 });
+
+// CREATE OPERATION
+router.post("/", async (req, res, next) => {
+  const newMovie = new Movie({
+    title: req.body.title,
+    director: req.body.director,
+    year: req.body.year,
+    genre: req.body.genre,
+  });
+  newMovie
+    .save()
+    .then(() => res.status(201).json(newMovie))
+    .catch((error) => {
+      next(error);
+    });
+});
+
+// UPDATE OPERATION
+router.put("/:id", async (req, res, next) => {
+  const id = req.params.id;
+  const newMovie = new Movie({
+    title: req.body.title,
+    director: req.body.director,
+    year: req.body.year,
+    genre: req.body.genre,
+    _id: id,
+  });
+  Movie.findByIdAndUpdate(id, newMovie)
+    .then(() => res.status(200).json(newMovie))
+    .catch((error) => {
+      next(error);
+    });
+});
+
+// DELETE OPERATION
+router.delete("/:id", async (req, res, next) => {
+  const id = req.params.id;
+  Movie.findByIdAndDelete(id)
+    .then(() => res.status(200).json(`Movie with id ${id} deleted`))
+    .catch((error) => {
+      next(error);
+    });
+});
+// functions, mover a otro archivo
 async function findOneByParameter(parameterName, parameterValue, next) {
   const movie = Movie.findOne({ [parameterName]: parameterValue }).exec();
   if (!movie) {
@@ -81,8 +126,14 @@ async function findMultipleByParameter(parameterName, parameterValue, next) {
   }
   return movies;
 }
-async function findMultipleGreaterByParameter(parameterName, parameterValue, next) {
-  const movies = Movie.find({ [parameterName]: {$gte:parameterValue} }).exec();
+async function findMultipleGreaterByParameter(
+  parameterName,
+  parameterValue,
+  next
+) {
+  const movies = Movie.find({
+    [parameterName]: { $gte: parameterValue },
+  }).exec();
   if (!movies) {
     next(new Error(`[ERROR] ${parameterName} ${parameterValue} no encontrado`));
     return;
