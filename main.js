@@ -1,6 +1,7 @@
 // Middlewares importacion
 const express = require("express");
 const moviesRouter = require("./routers/movies.router");
+const cinemasRouter = require("./routers/cinemas.router");
 const cors = require("cors");
 // Variables
 const server = express();
@@ -12,6 +13,7 @@ server.use(express.urlencoded({ extended: false }));
 server.use(cors());
 // Middleware enrutador
 server.use("/movies", moviesRouter);
+server.use("/cinemas", cinemasRouter);
 // Middleware de enrutado para rutas no existentes
 server.use("*", (req, res, next) => {
   const error = new Error("Ruta no encontrada");

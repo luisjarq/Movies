@@ -13,6 +13,25 @@ router.get("/", (req, res, next) => {
     return res.json(movie);
   });
 });
+router.get("/random/:limit", async (req, res, next) => {
+  const limit = req.params.limit;
+  const docsCount = await Movie.find()
+    .estimatedDocumentCount()
+    .then((result) => {
+      return {
+        total: result,
+        random: Math.floor(Math.random()*10),
+      };
+    });
+  Movie.find()
+    .skip(docsCount.total - docsCount.random)
+    .exec((error, movie) => {
+      if (error) {
+        next(error);
+      }
+      return res.json(movie);
+    });
+});
 router.get("/by", async (req, res, next) => {
   const title = req.query.title;
   const genre = req.query.genre;
@@ -31,7 +50,7 @@ router.get("/:id", async (req, res, next) => {
   const id = req.params.id;
   Movie.findById(id).exec((error, movie) => {
     if (!movie) {
-      const notFound = new Error(`[ERROR] Id ${id} no encontrado`);
+      const notFound = new Error(`[ERROR] Id ${id} not found`);
       next(notFound);
       return;
     } else if (error) {
@@ -45,7 +64,7 @@ router.get("/byTitle/:title", async (req, res, next) => {
   const title = req.params.title;
   Movie.findOne({ title: title }).exec((error, movie) => {
     if (!movie) {
-      next(new Error(`[ERROR] Titulo ${title} no encontrado`));
+      next(new Error(`[ERROR] Titulo ${title} not found`));
       return;
     } else if (error) {
       next(error);
@@ -58,7 +77,7 @@ router.get("/byGenre/:genre", async (req, res, next) => {
   const genre = req.params.genre;
   Movie.find({ genre: genre }).exec((error, movie) => {
     if (!movie) {
-      next(new Error(`[ERROR] Genre ${genre} no encontrado`));
+      next(new Error(`[ERROR] Genre ${genre} not found`));
       return;
     } else if (error) {
       next(error);
@@ -114,14 +133,14 @@ router.delete("/:id", async (req, res, next) => {
 async function findOneByParameter(parameterName, parameterValue, next) {
   const movie = Movie.findOne({ [parameterName]: parameterValue }).exec();
   if (!movie) {
-    next(new Error(`[ERROR] ${parameterName} ${parameterValue} no encontrado`));
+    next(new Error(`[ERROR] ${parameterName} ${parameterValue} not found`));
   }
   return movie;
 }
 async function findMultipleByParameter(parameterName, parameterValue, next) {
   const movies = Movie.find({ [parameterName]: parameterValue }).exec();
   if (!movies) {
-    next(new Error(`[ERROR] ${parameterName} ${parameterValue} no encontrado`));
+    next(new Error(`[ERROR] ${parameterName} ${parameterValue} not found`));
     return;
   }
   return movies;
@@ -135,7 +154,7 @@ async function findMultipleGreaterByParameter(
     [parameterName]: { $gte: parameterValue },
   }).exec();
   if (!movies) {
-    next(new Error(`[ERROR] ${parameterName} ${parameterValue} no encontrado`));
+    next(new Error(`[ERROR] ${parameterName} ${parameterValue} not found`));
     return;
   }
   return movies;

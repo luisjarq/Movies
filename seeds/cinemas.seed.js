@@ -1,30 +1,67 @@
-const mongoose = require('mongoose');
-const Cinema = require('../models/cinema');
-const { dbConnection } = require('../db/db_atlas');
+const mongoose = require("mongoose");
+const Cinema = require("../models/cinema");
+const Movie = require("../models/movie");
+const { dbConnection } = require("../db/db_atlas");
 
 const cinemas = [
-    {
-        "nombre": "Cinesa La Gavia",
-        "cif": "B123456789"
-    },
-    {
-        "nombre": "Yelmo Planetocio",
-        "cif": "B456789123",
-    },
+  {
+    name: "Cinesa La Gavia",
+    movies: [],
+  },
+  {
+    name: "Ciudad de la imagen",
+    movies: [],
+  },
+  {
+    name: "Cinesa Tres Cantos",
+    movies: [],
+  },
+  {
+    name: "Yelmo Planetocio",
+    movies: [],
+  },
+  {
+    name: "Yelmo Rivas",
+    movies: [],
+  },
+  {
+    name: "Yelmo Vicalvaro",
+    movies: [],
+  },
 ];
 
-const cinemaDocuments = cinemas.map(cinema => new Cinema(cinema));
+async function getRandomMovies() {
+  return Movie.aggregate(
+    [{ $match: {} }, { $sample: { size: 10 } }],
+    (err, docs) => {
+      return docs;
+    }
+  );
+}
 
-dbConnection
+async function main() {
+  const cinemaDocuments = [];
+  for (const cinema of cinemas) {
+    const nCinema = new Cinema(cinema);
+    const movies = (await getRandomMovies()).map((movie) => movie._id);
+    nCinema.movies = movies;
+    cinemaDocuments.push(nCinema);
+  }
+  console.log(cinemaDocuments);
+  dbConnection
     .then(async () => {
-        const allCinemas = await Cinema.find();
-        if (allCinemas.length > 0) {
-            await Cinema.collection.drop();
-        }
+      const allCinemas = await Cinema.find();
+      if (allCinemas.length > 0) {
+        await Cinema.collection.drop();
+      }
     })
-    .catch((error) => console.error('Error eliminando colección Cines:', error))
+    .catch((error) => console.error("Error deleting cinemas collection: ", error))
     .then(async () => {
-        await Cinema.insertMany(cinemaDocuments)
+      await Cinema.insertMany(cinemaDocuments);
     })
-    .catch((error) => console.error('Error al insertar en Cine:', error))
+    .catch((error) => console.error("Error creating cinema: ", error))
     .finally(() => mongoose.disconnect());
+}
+main();
+
+// Consultar las peliculas random para meterlas ne cada cine
