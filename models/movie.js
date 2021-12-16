@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-var random = require('mongoose-simple-random');
 
 const movieSchema = new Schema(
   {
@@ -20,8 +19,6 @@ const movieSchema = new Schema(
   },
   { timestamps: true }
 );
-
-movieSchema.plugin(random);
 
 const Movie = mongoose.model("Movie", movieSchema);
 module.exports = Movie;
