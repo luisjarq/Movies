@@ -26,6 +26,7 @@ router.get("/:id", (req, res, next) => {
         error.status = 404;
         return next(error);
       }
+      console.log(cinema);
       return res.json(cinema);
     })
     .catch((error) => {
