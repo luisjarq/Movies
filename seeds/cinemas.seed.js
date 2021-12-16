@@ -47,7 +47,7 @@ async function main() {
     nCinema.movies = movies;
     cinemaDocuments.push(nCinema);
   }
-  console.log(cinemaDocuments);
+  console.log(`Randomly filled ${cinemaDocuments.length} cinemas movies collection`);
   dbConnection
     .then(async () => {
       const allCinemas = await Cinema.find();
