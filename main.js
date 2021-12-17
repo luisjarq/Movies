@@ -1,15 +1,15 @@
 // Crear el servidor express
 const express = require("express");
 const server = express();
-const { PORT } = require("./config/config");
+const { PORT, JWT_Secret } = require("./config/config");
 // Connection asincrona (anteriormente devolvia una promise)
-const { connect, DB_URL } = require("./db/db_atlas");
+const { connect } = require("./db/db_atlas");
 connect();
 // Middlewares para utilizar los json en el body
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 //Configuracion para utilizar los tokens de JWT
-server.set("secretKey", "nodeRestApi"); 
+server.set("secretKey", JWT_Secret); 
 // Configuracion de los Heades de las respuestas
 server.use((req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
