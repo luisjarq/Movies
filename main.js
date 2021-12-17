@@ -21,8 +21,8 @@ server.use((req, res, next) => {
 const cors = require("cors");
 server.use(cors());
 // Middleware para logear las peticiones
-const logger = require("morgan");
-server.use(logger("dev"));
+//const logger = require("morgan");
+//server.use(logger("dev"));
 // Middleware enrutador
 const usersRouter = require("./routers/users.router");
 const moviesRouter = require("./routers/movies.router");
