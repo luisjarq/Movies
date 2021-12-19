@@ -40,7 +40,7 @@ async function autnethicateUser(req, res, next) {
           expiresIn: "1h",
         }
       );
-      return res.status(200).json({ token: token });
+      return res.status(200).json({ token: token , expiresIn: token.expiresIn});
     } else {
       return res.status(400).json();
     }
