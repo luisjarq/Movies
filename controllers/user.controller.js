@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 // Cargamos el módulo de jsonwebtoken
 const jwt = require("jsonwebtoken");
 const HTTPSTATUSCODE = require("../utils/httpStatusCode");
+const { use } = require("../routers/users.router");
 
 async function createUser(req, res, next) {
   try {
@@ -40,7 +41,9 @@ async function autnethicateUser(req, res, next) {
           expiresIn: "1h",
         }
       );
-      return res.status(200).json({ token: token , expiresIn: "1h"});
+      return res
+        .status(200)
+        .json({ token: token, expiresIn: 3600, id: user._id });
     } else {
       return res.status(400).json();
     }
